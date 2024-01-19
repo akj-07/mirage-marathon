@@ -1,0 +1,110 @@
+[gd_scene load_steps=9 format=3 uid="uid://cmg8mn8wbo5ec"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_8v3ya"]
+[ext_resource type="PackedScene" uid="uid://bviqdxnisomjy" path="res://terrain_controller.tscn" id="2_mviik"]
+[ext_resource type="Script" path="res://SubViewport.gd" id="3_ytac2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vkfgn"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_xrywn"]
+sky_material = SubResource("ProceduralSkyMaterial_vkfgn")
+
+[sub_resource type="Environment" id="Environment_7fpp3"]
+background_mode = 2
+sky = SubResource("Sky_xrywn")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7dqqd"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_s01a8"]
+points = PackedVector3Array(-0.125207, -0.532801, -0.480507, 0.0227831, 0.47607, 0.498884, 0.169713, 0.559144, 0.464172, 0.231051, -0.803591, 0.320455, 0.40741, 0.651043, -0.243523, -0.482789, 0.594843, 0.0822132, -0.362868, -0.682312, 0.289697, 0.469044, -0.654529, -0.0662713, -0.127444, 0.842701, -0.338103, -0.393435, -0.683942, -0.244717, 0.438255, 0.623309, 0.200849, 0.0841477, 0.977454, 0.114795, -0.0682023, -0.976458, -0.12927, 0.20055, -0.563129, -0.451454, -0.185527, 0.595453, -0.453475, -0.273363, 0.592268, 0.407754, -0.00693649, -0.476823, 0.49966, 0.375821, -0.588614, 0.316955, 0.111579, 0.563059, -0.481177, -0.41725, 0.527866, -0.270497, -0.484546, -0.596972, -0.0665097, -0.279747, 0.908561, 0.0533361, -0.250197, -0.880712, 0.205319, 0.263647, -0.902771, -0.127394, 0.293368, 0.871526, -0.157196, 0.373412, -0.526319, -0.328246, 0.499663, 0.476641, -0.00688856, 0.0531056, 0.875001, 0.324703, -0.154543, -0.590854, 0.465879, -0.0972799, -0.782358, -0.398188, -0.387649, -0.498171, 0.31565, -0.30068, -0.587995, -0.388901)
+
+[node name="World" type="Node3D"]
+
+[node name="Terrain_Controller" parent="." instance=ExtResource("2_mviik")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7fpp3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control/HBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(574, 648)
+render_target_update_mode = 4
+
+[node name="Player" type="CharacterBody3D" parent="Control/HBoxContainer/SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.86214)
+script = ExtResource("1_8v3ya")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Control/HBoxContainer/SubViewportContainer/SubViewport/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20481, 0)
+mesh = SubResource("CapsuleMesh_7dqqd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Control/HBoxContainer/SubViewportContainer/SubViewport/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20481, 0)
+shape = SubResource("ConvexPolygonShape3D_s01a8")
+
+[node name="Neck" type="Node3D" parent="Control/HBoxContainer/SubViewportContainer/SubViewport/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0455375, 1.95083, -0.0882642)
+
+[node name="Camera3D" type="Camera3D" parent="Control/HBoxContainer/SubViewportContainer/SubViewport/Player/Neck"]
+transform = Transform3D(1, 0, 0, 0, 0.990689, 0.136148, 0, -0.136148, 0.990689, 0, 0.642558, 1.54973)
+
+[node name="SubViewportContainer2" type="SubViewportContainer" parent="Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Control/HBoxContainer/SubViewportContainer2"]
+handle_input_locally = false
+size = Vector2i(574, 648)
+render_target_update_mode = 4
+script = ExtResource("3_ytac2")
+
+[node name="CameraForward" type="Camera3D" parent="Control/HBoxContainer/SubViewportContainer2/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.0383354, 0.999265, 0, -0.999265, 0.0383354, -0.0487814, 21.3047, -3.23176)
+
+[node name="CameraRight" type="Camera3D" parent="Control/HBoxContainer/SubViewportContainer2/SubViewport"]
+transform = Transform3D(0.692345, -0.0276616, -0.721037, 0.721567, 0.0265413, 0.691836, -1.48496e-09, -0.999265, 0.0383354, -21.0632, 21.3047, -3.23176)
+
+[node name="CameraLeft" type="Camera3D" parent="Control/HBoxContainer/SubViewportContainer2/SubViewport"]
+transform = Transform3D(0.694545, 0.0275804, 0.71892, -0.719449, 0.0266257, 0.694035, 0, -0.999265, 0.0383354, 21.2773, 21.3047, -3.23176)
+
+[node name="CameraBackward" type="Camera3D" parent="Control/HBoxContainer/SubViewportContainer2/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.0383354, 0.999265, 0, -0.999265, 0.0383354, -0.0487814, 38.5961, -3.23176)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/HBoxContainer/SubViewportContainer2/SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Top View"
+fit_content = true
