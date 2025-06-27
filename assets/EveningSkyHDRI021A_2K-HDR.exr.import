@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cu48b6brait02"
 path.bptc="res://.godot/imported/EveningSkyHDRI021A_2K-HDR.exr-92eb6f2b844f1f83e2fdd846bc97c10b.bptc.ctex"
+path.astc="res://.godot/imported/EveningSkyHDRI021A_2K-HDR.exr-92eb6f2b844f1f83e2fdd846bc97c10b.astc.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/EveningSkyHDRI021A_2K-HDR.exr"
-dest_files=["res://.godot/imported/EveningSkyHDRI021A_2K-HDR.exr-92eb6f2b844f1f83e2fdd846bc97c10b.bptc.ctex"]
+dest_files=["res://.godot/imported/EveningSkyHDRI021A_2K-HDR.exr-92eb6f2b844f1f83e2fdd846bc97c10b.bptc.ctex", "res://.godot/imported/EveningSkyHDRI021A_2K-HDR.exr-92eb6f2b844f1f83e2fdd846bc97c10b.astc.ctex"]
 
 [params]
 

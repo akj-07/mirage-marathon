@@ -2,19 +2,26 @@ extends CharacterBody3D
 
 const SPEED = 10.0
 
-func _physics_process(_delta: float) -> void:
+@export var side_speed: float = 8.0
+#@export var move_limit_x: float = 20.0
 
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	# We'll ignore up and down input, just using side to side
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+func _physics_process(delta: float) -> void:
+	# Reset lateral velocity each frame
+	velocity.x = 0
+
+	# Apply lateral input
+	if Input.is_action_pressed("move_left"):
+		velocity.x = -side_speed
+	elif Input.is_action_pressed("move_right"):
+		velocity.x = side_speed
 
 	move_and_slide()
+
+	# Clamp X position to prevent moving out of bounds
+	#position.x = clamp(position.x, -move_limit_x, move_limit_x)
 
 	var collision = get_last_slide_collision()
 	if collision:
 		print("Collided with: ", collision.get_collider())
 		get_tree().quit()
+		

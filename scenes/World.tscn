@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://cmg8mn8wbo5ec"]
+[gd_scene load_steps=12 format=3 uid="uid://cmg8mn8wbo5ec"]
 
 [ext_resource type="Script" uid="uid://wpb0381ag8ok" path="res://script/Player.gd" id="1_8v3ya"]
 [ext_resource type="Texture2D" uid="uid://cu48b6brait02" path="res://assets/EveningSkyHDRI021A_2K-HDR.exr" id="2_d1c63"]
 [ext_resource type="PackedScene" uid="uid://bviqdxnisomjy" path="res://scenes/terrain_controller.tscn" id="2_mviik"]
 [ext_resource type="Script" uid="uid://bsil32ldw7pm" path="res://script/SubViewport.gd" id="3_ytac2"]
 [ext_resource type="Script" uid="uid://7jtidhhvitdk" path="res://script/pause_button.gd" id="5_1lgw5"]
+[ext_resource type="Script" uid="uid://db2doleyek52w" path="res://script/input_overlay.gd" id="5_hlk0d"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1lgw5"]
 panorama = ExtResource("2_d1c63")
@@ -12,10 +13,14 @@ energy_multiplier = 10.0
 
 [sub_resource type="Sky" id="Sky_hlk0d"]
 sky_material = SubResource("PanoramaSkyMaterial_1lgw5")
+process_mode = 1
 
 [sub_resource type="Environment" id="Environment_0uv0p"]
 background_mode = 2
 sky = SubResource("Sky_hlk0d")
+sky_rotation = Vector3(0, 2.00713, 0)
+ambient_light_sky_contribution = 0.5
+ambient_light_energy = 10.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7dqqd"]
 
@@ -57,7 +62,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Control/VBoxContainer/SubViewportContainer2"]
 handle_input_locally = false
-size = Vector2i(1152, 322)
+size = Vector2i(1080, 358)
 render_target_update_mode = 4
 script = ExtResource("3_ytac2")
 
@@ -89,11 +94,11 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Control/VBoxContainer/SubViewportContainer"]
 handle_input_locally = false
-size = Vector2i(1152, 322)
+size = Vector2i(1080, 358)
 render_target_update_mode = 4
 
 [node name="Player" type="CharacterBody3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.86214)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.10142, 6.86214)
 script = ExtResource("1_8v3ya")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport/Player"]
@@ -108,7 +113,16 @@ shape = SubResource("ConvexPolygonShape3D_s01a8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0455375, 1.95083, -0.0882642)
 
 [node name="Camera3D" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck"]
-transform = Transform3D(1, 0, 0, 0, 0.990689, 0.136148, 0, -0.136148, 0.990689, 0, 0.642558, 1.54973)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 2.72937)
+
+[node name="InputOverlay" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_hlk0d")
 
 [node name="Control2" type="Control" parent="."]
 layout_mode = 3
