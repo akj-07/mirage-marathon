@@ -154,13 +154,23 @@ func _spawn_walls(block: MeshInstance3D) -> void:
 		var block_width = block.mesh.size.x
 		var block_length = block.mesh.size.y  # Use z for length since that's our forward axis
 		
-		wall.position.x = randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
-		wall.position.z = randf_range(-block_length/2 + wall_depth/2, block_length/2 - wall_depth/2)
-		wall.position.y = wall_height / 2  # So it sits on the terrain surface
-		
+		var final_global_pos: Vector3
+		# Check the previous walls co-ordinates and add the new wall 10 units
+		# ahead in the z direction.
+		if active_walls:
+			var last_wall = active_walls[-1]
+			final_global_pos = last_wall.global_position
+			final_global_pos.z += 10
+			final_global_pos.x =  randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
+		else:
+			var x = randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
+			var z = randf_range(-block_length/2 + wall_depth/2, block_length/2 - wall_depth/2)
+			var loc_pos = Vector3(x, wall_height/2, z)  # So it sits on the terrain surface
+			final_global_pos = block.to_global(loc_pos)
+	
 		# Add wall as child of the terrain block so it moves with it
 		block.add_child(wall)
-		
+		wall.global_position = final_global_pos
 		# Track the wall for cleanup
 		active_walls.append(wall)
 		
