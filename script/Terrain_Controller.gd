@@ -6,7 +6,7 @@ class_name TerrainController
 @export var terrain_scene: PackedScene = preload("res://scenes/Endless_Terrain.tscn")
 
 var terrain_belt: Array[MeshInstance3D] = []
-@export var terrain_velocity: float = 10.0
+@export var terrain_velocity: float = 6.0
 @export var num_terrain_blocks: int = 1  # Start with more blocks for smoother transitions
 @export var generation_distance: float = 50.0  # Distance ahead of camera to generate new blocks
 @export var cleanup_distance: float = 30.0     # Distance behind camera to remove old blocks
@@ -106,8 +106,8 @@ func _generate_new_block() -> void:
 	var last_terrain = terrain_belt[-1]
 	_append_to_far_edge(last_terrain, block)
 	add_child(block)
-	terrain_belt.append(block)
 	_spawn_walls(block)
+	terrain_belt.append(block)
 
 func _remove_old_block() -> void:
 	if terrain_belt.is_empty():
@@ -160,11 +160,11 @@ func _spawn_walls(block: MeshInstance3D) -> void:
 		if active_walls:
 			var last_wall = active_walls[-1]
 			final_global_pos = last_wall.global_position
-			final_global_pos.z += 10
+			final_global_pos.z += 8
 			final_global_pos.x =  randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
 		else:
-			var x = randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
-			var z = randf_range(-block_length/2 + wall_depth/2, block_length/2 - wall_depth/2)
+			var x = randf_range(-block_width/2 + wall_width/2 , block_width/2 - wall_width/2)
+			var z = randf_range(-block_length/2 + wall_depth/2 , block_length/2 - wall_depth/2)
 			var loc_pos = Vector3(x, wall_height/2, z)  # So it sits on the terrain surface
 			final_global_pos = block.to_global(loc_pos)
 	

@@ -19,8 +19,15 @@ process_mode = 1
 background_mode = 2
 sky = SubResource("Sky_hlk0d")
 sky_rotation = Vector3(0, 2.00713, 0)
-ambient_light_sky_contribution = 0.5
+ambient_light_source = 3
 ambient_light_energy = 10.0
+reflected_light_source = 2
+fog_light_energy = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_gi_inject = 0.44
+volumetric_fog_anisotropy = 0.0
+volumetric_fog_length = 30.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7dqqd"]
 
