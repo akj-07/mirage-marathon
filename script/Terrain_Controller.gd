@@ -7,23 +7,31 @@ class_name TerrainController
 
 var terrain_belt: Array[MeshInstance3D] = []
 @export var terrain_velocity: float = 6.0
-@export var num_terrain_blocks: int = 1  # Start with more blocks for smoother transitions
-@export var generation_distance: float = 50.0  # Distance ahead of camera to generate new blocks
-@export var cleanup_distance: float = 30.0     # Distance behind camera to remove old blocks
+@export var num_terrain_blocks: int = 2  # Start with 2 blocks for smoother transitions
+@export var generation_distance: float = 100.0  # Distance ahead of camera to generate new blocks
+@export var cleanup_distance: float = 50.0     # Distance behind camera to remove old blocks
 
 const wall_scene = preload("res://scenes/Wall.tscn")
 @onready var player: CharacterBody3D = $"../Control/VBoxContainer/SubViewportContainer/SubViewport/Player"
 @onready var camera: Camera3D = $"../Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck/Camera3D"
+var last_terrain = null
 
 # Track walls separately to prevent premature deletion
 var active_walls: Array[Node3D] = []
+# Track wall generation parameters
+@export var wall_generation_distance: float = 15.0  # Distance ahead of camera to generate walls
+@export var wall_spacing: float = 8.0  # Fixed distance between walls
+@export var wall_generation_ahead: float = 100.0   # Maximum distance ahead to maintain walls
 
 func _ready() -> void:
-	_init_blocks(num_terrain_blocks)
+	# Force initialization of exactly 2 blocks
+	_init_blocks(2)
+	print("Initial terrain blocks created: ", terrain_belt.size())
 
 func _physics_process(delta: float) -> void:
 	_progress_terrain(delta)
 	_manage_terrain_based_on_camera()
+	_manage_wall_generation()
 	_cleanup_distant_walls()
 
 func _init_blocks(number_of_blocks: int) -> void:
@@ -45,18 +53,16 @@ func _init_blocks(number_of_blocks: int) -> void:
 			block.queue_free()
 			continue
 		
-		if block_index == 0:
+		if block_index == 0 or block_index == 1:
 			# Position first block so its front edge is at z=0
 			block.position.z = -block.mesh.size.y / 2
+			print("First block positioned at: ", block.position)
 		else:
 			_append_to_far_edge(terrain_belt[block_index-1], block)
+			print("Block ", block_index, " positioned at: ", block.position)
 		
 		add_child(block)
 		terrain_belt.append(block)
-		
-		# Spawn walls on blocks after the first one (so player doesn't spawn inside a wall)
-		if block_index > 0:
-			_spawn_walls(block)
 
 func _progress_terrain(delta: float) -> void:
 	# A safety check to prevent errors if the belt is empty
@@ -78,19 +84,35 @@ func _manage_terrain_based_on_camera() -> void:
 	
 	var camera_z = camera.global_position.z
 	
-	# Check if we need to generate a new block ahead
-	var last_block = terrain_belt[-1]
-	var last_block_end = last_block.global_position.y + last_block.mesh.size.y / 2
+	# Check if we need to generate a new block
+	if terrain_belt.size() >= 1:
+		var first_block = terrain_belt[0]
+		var first_block_end = first_block.global_position.z + first_block.mesh.size.y / 2
+		
+		# Generate new block when player is close to the end of first block
+		if camera_z >= (first_block_end - generation_distance):
+			_generate_new_block()
+			print("Generated new block. Total blocks: ", terrain_belt.size())
 	
-	if last_block_end < camera_z + generation_distance:
-		_generate_new_block()
+	# Only remove old blocks if we have more than 2 blocks AND the first block is far behind
+	if terrain_belt.size() > 2:
+		var first_block = terrain_belt[0]
+		var first_block_end = first_block.global_position.z + first_block.mesh.size.y / 2
+		
+		# More conservative cleanup - only remove when block is much further behind
+		if first_block_end < (camera_z - cleanup_distance * 2):  # Double the cleanup distance
+			_remove_old_block()
+			print("Removed old block. Remaining blocks: ", terrain_belt.size())
+
+func _append_to_far_edge(target_block: MeshInstance3D, appending_block: MeshInstance3D) -> void:
+	if target_block.mesh == null or appending_block.mesh == null:
+		return
 	
-	# Check if we need to remove old blocks behind the camera
-	var first_block = terrain_belt[0]
-	var first_block_end = first_block.global_position.y + first_block.mesh.size.y / 2
+	# FIXED: Use Z axis consistently for positioning
+	appending_block.position.z = target_block.position.z - target_block.mesh.size.y / 2 - appending_block.mesh.size.y / 2
 	
-	if first_block_end < camera_z - cleanup_distance:
-		_remove_old_block()
+	# Keep blocks at the same height
+	appending_block.position.y = target_block.position.y
 
 func _generate_new_block() -> void:
 	if terrain_scene == null:
@@ -103,11 +125,15 @@ func _generate_new_block() -> void:
 		block.queue_free()
 		return
 	
-	var last_terrain = terrain_belt[-1]
+	# Position new block at the end of the last block
+	if not terrain_belt.is_empty():
+		last_terrain = terrain_belt[-1]
 	_append_to_far_edge(last_terrain, block)
+	
 	add_child(block)
-	_spawn_walls(block)
 	terrain_belt.append(block)
+	
+	print("New block generated at position: ", block.position)
 
 func _remove_old_block() -> void:
 	if terrain_belt.is_empty():
@@ -119,62 +145,104 @@ func _remove_old_block() -> void:
 	_remove_walls_from_block(old_block)
 	
 	old_block.queue_free()
+	print("Old block removed")
 
-func _append_to_far_edge(target_block: MeshInstance3D, appending_block: MeshInstance3D) -> void:
-	if target_block.mesh == null or appending_block.mesh == null:
+func _manage_wall_generation() -> void:
+	if camera == null or terrain_belt.is_empty():
 		return
 	
-	# Position the new block at the far edge of the target block
-	appending_block.position.z = target_block.position.y - target_block.mesh.size.y / 2 - appending_block.mesh.size.y / 2
+	var camera_z = camera.global_position.z
 	
-	# Keep blocks at the same height
-	appending_block.position.y = target_block.position.y
+	# Check if we have any active walls
+	if active_walls.is_empty():
+		# No walls exist - generate walls up to 100m ahead
+		_generate_initial_wall_segment(camera_z)
+	else:
+		# Find the furthest wall ahead
+		var furthest_wall_z = _get_furthest_wall_z()
+		
+		# If the furthest wall is less than 100m ahead, generate more walls
+		var distance_to_furthest = camera_z - furthest_wall_z
+		if distance_to_furthest > -(wall_generation_ahead):
+			_generate_walls_to_distance(furthest_wall_z, camera_z - wall_generation_ahead)
 
-func _spawn_walls(block: MeshInstance3D) -> void:
-	if wall_scene == null or block.mesh == null: 
+func _generate_initial_wall_segment(camera_z: float) -> void:
+	"""Generate walls from current position up to 100m ahead"""
+	print("Generating initial wall segment")
+	
+	var current_z = camera_z - wall_spacing  # Start first wall 8 units ahead
+	var target_z = camera_z - wall_generation_ahead  # Generate up to 100m ahead
+	
+	while current_z >= target_z:
+		_generate_wall_at_position(current_z)
+		current_z -= wall_spacing  # Move to next wall position (8 units further)
+
+func _generate_walls_to_distance(start_z: float, target_z: float) -> void:
+	"""Generate walls from start_z to target_z with proper spacing"""
+	print("Generating walls from ", start_z, " to ", target_z)
+	
+	var current_z = start_z - wall_spacing  # Start next wall at proper spacing
+	
+	while current_z >= target_z:
+		_generate_wall_at_position(current_z)
+		current_z -= wall_spacing  # Move to next wall position
+
+func _get_furthest_wall_z() -> float:
+	"""Get the Z position of the furthest wall ahead (lowest Z value)"""
+	var furthest_z = INF
+	
+	for wall in active_walls:
+		if is_instance_valid(wall):
+			if wall.global_position.z < furthest_z:
+				furthest_z = wall.global_position.z
+	
+	return furthest_z if furthest_z != INF else 0.0
+
+func _generate_wall_at_position(target_z: float) -> void:
+	if wall_scene == null or terrain_belt.is_empty():
 		return
 	
-	# Spawn 0,1 walls randomly on this block
-	var num_walls = randi_range(0,1)
+	# Find the terrain block that should contain this wall
+	var target_block: MeshInstance3D = null
+	for block in terrain_belt:
+		var block_start = block.global_position.z - block.mesh.size.y / 2
+		var block_end = block.global_position.z + block.mesh.size.y / 2
+		if target_z >= block_start and target_z <= block_end:
+			target_block = block
+			break
 	
-	for i in range(num_walls):
-		var wall = wall_scene.instantiate()
-		
-		# Set wall size
-		var wall_width = 6.0
-		var wall_height = 4.0
-		var wall_depth = 1.0
-		
-		if wall.has_method("set_wall_size"):
-			wall.set_wall_size(wall_width, wall_height, wall_depth)
-		elif wall is MeshInstance3D and wall.mesh is BoxMesh:
-			wall.mesh.size = Vector3(wall_width, wall_height, wall_depth)
-		
-		# Position wall randomly on the block (using local coordinates)
-		var block_width = block.mesh.size.x
-		var block_length = block.mesh.size.y  # Use z for length since that's our forward axis
-		
-		var final_global_pos: Vector3
-		# Check the previous walls co-ordinates and add the new wall 10 units
-		# ahead in the z direction.
-		if active_walls:
-			var last_wall = active_walls[-1]
-			final_global_pos = last_wall.global_position
-			final_global_pos.z += 8
-			final_global_pos.x =  randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
-		else:
-			var x = randf_range(-block_width/2 + wall_width/2 , block_width/2 - wall_width/2)
-			var z = randf_range(-block_length/2 + wall_depth/2 , block_length/2 - wall_depth/2)
-			var loc_pos = Vector3(x, wall_height/2, z)  # So it sits on the terrain surface
-			final_global_pos = block.to_global(loc_pos)
+	if target_block == null:
+		# If no block found, use the last block as fallback
+		target_block = terrain_belt[-1]
 	
-		# Add wall as child of the terrain block so it moves with it
-		block.add_child(wall)
-		wall.global_position = final_global_pos
-		# Track the wall for cleanup
-		active_walls.append(wall)
-		
-		print("Spawning wall at local position: ", wall.position, " on block at: ", block.global_position)
+	# Randomly decide if we should spawn a wall (50% chance)
+	if randi_range(0, 1) == 0:
+		print("Skipping wall generation at ", target_z, " (random)")
+		return
+	
+	var wall = wall_scene.instantiate()
+	
+	# Set wall size
+	var wall_width = 6.0
+	var wall_height = 4.0
+	var wall_depth = 1.0
+	
+	if wall.has_method("set_wall_size"):
+		wall.set_wall_size(wall_width, wall_height, wall_depth)
+	elif wall.mesh is BoxMesh:
+		wall.mesh.size = Vector3(wall_width, wall_height, wall_depth)
+	
+	# Position wall
+	var block_width = target_block.mesh.size.x
+	var x = randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)
+	var final_global_pos = Vector3(x, wall_height/2, target_z)
+	
+	# Add wall as child of the terrain block so it moves with it
+	target_block.add_child(wall)
+	wall.global_position = final_global_pos
+	active_walls.append(wall)
+	
+	print("Generated wall at position: ", wall.global_position, " on block at: ", target_block.global_position)
 
 func _remove_walls_from_block(block: MeshInstance3D) -> void:
 	# Remove walls that belong to this block from our tracking array
@@ -182,6 +250,7 @@ func _remove_walls_from_block(block: MeshInstance3D) -> void:
 		var wall = active_walls[i]
 		if not is_instance_valid(wall) or wall.get_parent() == block:
 			active_walls.remove_at(i)
+			print("Wall removed from tracking")
 
 func _cleanup_distant_walls() -> void:
 	if camera == null:
@@ -196,6 +265,8 @@ func _cleanup_distant_walls() -> void:
 			active_walls.remove_at(i)
 			continue
 		
+		# Remove walls that are too far behind the camera
 		if wall.global_position.z > camera_z + cleanup_distance:
+			print("Cleaning up distant wall at: ", wall.global_position)
 			wall.queue_free()
 			active_walls.remove_at(i)
