@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cmg8mn8wbo5ec"]
+[gd_scene load_steps=13 format=3 uid="uid://cmg8mn8wbo5ec"]
 
 [ext_resource type="Script" uid="uid://wpb0381ag8ok" path="res://script/Player.gd" id="1_8v3ya"]
 [ext_resource type="Texture2D" uid="uid://cu48b6brait02" path="res://assets/EveningSkyHDRI021A_2K-HDR.exr" id="2_d1c63"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bsil32ldw7pm" path="res://script/SubViewport.gd" id="3_ytac2"]
 [ext_resource type="Script" uid="uid://7jtidhhvitdk" path="res://script/pause_button.gd" id="5_1lgw5"]
 [ext_resource type="Script" uid="uid://db2doleyek52w" path="res://script/input_overlay.gd" id="5_hlk0d"]
+[ext_resource type="Script" uid="uid://cr3li0eg0012w" path="res://script/right_input_overlay.gd" id="6_0uv0p"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1lgw5"]
 panorama = ExtResource("2_d1c63")
@@ -122,14 +123,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0455375, 1.95083, -0.08826
 [node name="Camera3D" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 2.72937)
 
-[node name="InputOverlay" type="Control" parent="Control"]
+[node name="LeftInputOverlay" type="Control" parent="Control"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_hlk0d")
+
+[node name="RightInputOverlay" type="Control" parent="Control"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.018
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -12.96
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_0uv0p")
 
 [node name="Control2" type="Control" parent="."]
 layout_mode = 3

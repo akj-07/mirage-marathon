@@ -227,11 +227,15 @@ func _generate_wall_at_position(target_z: float) -> void:
 	var wall_height = 4.0
 	var wall_depth = 1.0
 	
-	if wall.has_method("set_wall_size"):
-		wall.set_wall_size(wall_width, wall_height, wall_depth)
-	elif wall.mesh is BoxMesh:
+	if wall.mesh is BoxMesh:
 		wall.mesh.size = Vector3(wall_width, wall_height, wall_depth)
-	
+		
+	var static_body = wall.get_node("StaticBody3D")
+	if static_body:
+		var collision_shape = static_body.get_node("CollisionShape3D")
+		if collision_shape and collision_shape.shape is BoxShape3D:
+			collision_shape.shape.size = Vector3(wall_width, wall_height, wall_depth)
+			
 	# Position wall
 	var block_width = target_block.mesh.size.x
 	var x = randf_range(-block_width/2 + wall_width/2, block_width/2 - wall_width/2)

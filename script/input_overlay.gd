@@ -1,17 +1,19 @@
 extends Control
 
-func _unhandled_input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch or event is InputEventMouseButton:
 		if event.pressed:
-			_process_touch(event.position)
+			print("Left side pressed - releasing right first")
+			# Ensure right is released when left is pressed
+			Input.action_release("move_right")
+			Input.action_press("move_left")
+		else:
+			print("Left side released")
+			Input.action_release("move_left")
 	elif event is InputEventScreenDrag:
-		_process_touch(event.position)
+		# Only press if not already pressed to avoid conflicts
+		if not Input.is_action_pressed("move_left"):
+			Input.action_release("move_right")  # Release opposite direction
+			Input.action_press("move_left")
 
-func _process_touch(pos: Vector2) -> void:
-	var screen_center = get_viewport().size.x / 2
-	if pos.x < screen_center:
-		Input.action_press("move_left")
-		Input.action_release("move_right")
-	else:
-		Input.action_press("move_right")
-		Input.action_release("move_left")
+# Remove the _input method to avoid conflicts - only use _gui_input for GUI controls
