@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cmg8mn8wbo5ec"]
+[gd_scene load_steps=15 format=3 uid="uid://cmg8mn8wbo5ec"]
 
 [ext_resource type="Script" uid="uid://wpb0381ag8ok" path="res://script/Player.gd" id="1_8v3ya"]
 [ext_resource type="Texture2D" uid="uid://cu48b6brait02" path="res://assets/EveningSkyHDRI021A_2K-HDR.exr" id="2_d1c63"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://7jtidhhvitdk" path="res://script/pause_button.gd" id="5_1lgw5"]
 [ext_resource type="Script" uid="uid://db2doleyek52w" path="res://script/input_overlay.gd" id="5_hlk0d"]
 [ext_resource type="Script" uid="uid://cr3li0eg0012w" path="res://script/right_input_overlay.gd" id="6_0uv0p"]
+[ext_resource type="FontFile" uid="uid://bjw56juwskwx8" path="res://assets/LilitaOne-Regular-NotoSans-Black.ttf" id="8_b3faq"]
+[ext_resource type="Script" uid="uid://b8ykjki5w1vwy" path="res://script/score.gd" id="9_ygioq"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1lgw5"]
 panorama = ExtResource("2_d1c63")
@@ -156,5 +158,27 @@ offset_bottom = 36.0
 theme_override_font_sizes/font_size = 20
 text = "||"
 script = ExtResource("5_1lgw5")
+
+[node name="ScoreController" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 841.0
+offset_top = 24.0
+offset_right = 881.0
+offset_bottom = 64.0
+scale = Vector2(1.6, 1)
+
+[node name="Score" type="Label" parent="ScoreController"]
+layout_mode = 0
+offset_left = -53.1249
+offset_top = -3.0
+offset_right = 47.8751
+offset_bottom = 92.0
+scale = Vector2(1.08773, 0.982923)
+theme_override_fonts/font = ExtResource("8_b3faq")
+theme_override_font_sizes/font_size = 40
+text = "Score 
+0"
+script = ExtResource("9_ygioq")
 
 [connection signal="pressed" from="Control2/PauseButton" to="Control2/PauseButton" method="_on_pause_button_pressed"]

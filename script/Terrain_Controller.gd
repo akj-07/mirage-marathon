@@ -14,6 +14,7 @@ var terrain_belt: Array[MeshInstance3D] = []
 const wall_scene = preload("res://scenes/Wall.tscn")
 @onready var player: CharacterBody3D = $"../Control/VBoxContainer/SubViewportContainer/SubViewport/Player"
 @onready var camera: Camera3D = $"../Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck/Camera3D"
+@onready var score_controller = $"../ScoreController/Score"
 var last_terrain = null
 
 # Track walls separately to prevent premature deletion
@@ -23,16 +24,27 @@ var active_walls: Array[Node3D] = []
 @export var wall_spacing: float = 8.0  # Fixed distance between walls
 @export var wall_generation_ahead: float = 100.0   # Maximum distance ahead to maintain walls
 
+# Score tracking
+var passed_walls: Array[Node3D] = []  # Track walls that have been passed to avoid double scoring
+@export var points_per_wall: int = 10  # Points awarded for passing each wall
+
 func _ready() -> void:
 	# Force initialization of exactly 2 blocks
 	_init_blocks(2)
 	print("Initial terrain blocks created: ", terrain_belt.size())
+	
+	# Verify score controller connection
+	if score_controller == null:
+		print("Warning: Score controller not found at path: ../ScoreController/Score")
+	else:
+		print("Score controller connected successfully")
 
 func _physics_process(delta: float) -> void:
 	_progress_terrain(delta)
 	_manage_terrain_based_on_camera()
 	_manage_wall_generation()
 	_cleanup_distant_walls()
+	_check_wall_passes()  # New function to check for wall passes
 
 func _init_blocks(number_of_blocks: int) -> void:
 	# A safety check to make sure the scene was loaded
@@ -246,7 +258,33 @@ func _generate_wall_at_position(target_z: float) -> void:
 	wall.global_position = final_global_pos
 	active_walls.append(wall)
 	
+	# Add custom metadata to track if this wall has been passed
+	wall.set_meta("passed", false)
+	wall.set_meta("original_z", target_z)  # Store original Z position for scoring
+	
 	print("Generated wall at position: ", wall.global_position, " on block at: ", target_block.global_position)
+
+func _check_wall_passes() -> void:
+	"""Check if player has passed any walls and award points"""
+	if camera == null:
+		return
+	
+	var player_z = camera.global_position.z
+	
+	for wall in active_walls:
+		if not is_instance_valid(wall):
+			continue
+		
+		# Check if this wall hasn't been passed yet
+		if not wall.get_meta("passed", false):
+			# Check if player has passed this wall (player Z is greater than wall Z)
+			if player_z > wall.global_position.z:
+				# Mark wall as passed
+				wall.set_meta("passed", true)
+				
+				# Award points
+				_update_score(points_per_wall)
+				print("Player passed wall! Awarded ", points_per_wall, " points. Wall was at Z: ", wall.global_position.z)
 
 func _remove_walls_from_block(block: MeshInstance3D) -> void:
 	# Remove walls that belong to this block from our tracking array
@@ -274,3 +312,25 @@ func _cleanup_distant_walls() -> void:
 			print("Cleaning up distant wall at: ", wall.global_position)
 			wall.queue_free()
 			active_walls.remove_at(i)
+
+func _update_score(points: int) -> void:
+	"""Update the score by adding points"""
+	if score_controller != null:
+		if score_controller.has_method("add_score"):
+			score_controller.add_score(points)
+			print("Score updated: +", points, " points")
+		elif score_controller.has_method("update_score"):
+			score_controller.update_score(points)
+			print("Score updated: +", points, " points")
+		else:
+			print("Warning: Score controller doesn't have add_score() or update_score() method")
+			# Try to access score property directly if it exists
+			if "score" in score_controller:
+				score_controller.score += points
+				print("Score updated directly: +", points, " points")
+	else:
+		print("Warning: Score controller not found - cannot update score")
+
+# Optional: Public method to manually add score (can be called from other scripts)
+func add_score(points: int) -> void:
+	_update_score(points)
