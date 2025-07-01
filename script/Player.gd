@@ -16,10 +16,10 @@ func _physics_process(delta: float) -> void:
 	# Apply lateral input with priority system
 	if left_pressed and not right_pressed:
 		velocity.x = -side_speed
-		print("Moving left")
+
 	elif right_pressed and not left_pressed:
 		velocity.x = side_speed
-		print("Moving right")
+
 	elif left_pressed and right_pressed:
 		# Both pressed - cancel out (or you could give priority to one)
 		velocity.x = 0

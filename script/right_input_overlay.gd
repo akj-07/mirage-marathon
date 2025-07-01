@@ -3,7 +3,7 @@ extends Control
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch or event is InputEventMouseButton:
 		if event.pressed:
-			print("Right side pressed - releasing left first")
+			#print("Right side pressed - releasing left first")
 			# Ensure left is released when right is pressed
 			Input.action_release("move_left")
 			Input.action_press("move_right")
