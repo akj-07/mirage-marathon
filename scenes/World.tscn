@@ -123,7 +123,7 @@ shape = SubResource("ConvexPolygonShape3D_s01a8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0455375, 1.95083, -0.0882642)
 
 [node name="Camera3D" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 2.72937)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 3.56642)
 
 [node name="LeftInputOverlay" type="Control" parent="Control"]
 layout_mode = 1
@@ -161,19 +161,26 @@ script = ExtResource("5_1lgw5")
 
 [node name="ScoreController" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 841.0
-offset_top = 24.0
-offset_right = 881.0
-offset_bottom = 64.0
+anchor_left = 0.705
+anchor_top = 0.033
+anchor_right = 0.705
+anchor_bottom = 0.033
+offset_left = 79.6
+offset_top = 0.24
+offset_right = 119.6
+offset_bottom = 40.24
 scale = Vector2(1.6, 1)
 
 [node name="Score" type="Label" parent="ScoreController"]
-layout_mode = 0
-offset_left = -53.1249
-offset_top = -3.0
-offset_right = 47.8751
-offset_bottom = 92.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -1.328
+anchor_top = -0.075
+anchor_right = -1.328
+anchor_bottom = -0.075
+offset_left = 0.120003
+offset_right = 101.12
+offset_bottom = 95.0
 scale = Vector2(1.08773, 0.982923)
 theme_override_fonts/font = ExtResource("8_b3faq")
 theme_override_font_sizes/font_size = 40

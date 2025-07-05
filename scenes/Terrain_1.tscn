@@ -1,0 +1,150 @@
+[gd_scene load_steps=5 format=3 uid="uid://cyyyf5rq5u483"]
+
+[ext_resource type="Script" uid="uid://7fe72kr5g062" path="res://script/Wall.gd" id="1_cuhqo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cuhqo"]
+albedo_color = Color(0.745098, 0.533333, 0.635294, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5a0sc"]
+material = SubResource("StandardMaterial3D_cuhqo")
+size = Vector2(30, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5a0sc"]
+albedo_color = Color(0.701961, 0.439216, 0.168627, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.58237)
+mesh = SubResource("PlaneMesh_5a0sc")
+
+[node name="Wall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.00672, 1.7853, 20.3509)
+use_collision = true
+size = Vector3(10, 4, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_max = 4
+Scale = 3
+x_scale_max = 10
+y_scale_max = 10
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, -0.000907571, 0, 1, 0, 0.000907571, 0, 1, -4.80041, 1.7853, -14.4707)
+use_collision = true
+size = Vector3(10, 4, 8)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_min = -4
+Scale = 3
+x_scale_min = -4
+x_scale_max = 4
+y_scale_min = -4
+y_scale_max = 4
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.28949, 1.7853, -14.4755)
+use_collision = true
+size = Vector3(10, 4, 8)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_max = 4
+Scale = 3
+x_scale_min = -4
+x_scale_max = 4
+y_scale_min = -4
+y_scale_max = 4
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.80933, 2.03706, 15.8809)
+use_collision = true
+size = Vector3(18, 4, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall" type="CSGBox3D" parent="Wall2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.22088, 0.0149384)
+operation = 2
+size = Vector3(2, 3, 2)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_min = -5
+x_offset_max = 6
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.48151, 3.61532, 7.8894)
+use_collision = true
+size = Vector3(8, 8, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+Scale = 1
+x_scale_min = -4
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.37503, 3.65511, 3.38291)
+use_collision = true
+size = Vector3(2.5, 8, 10)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5429, 3.79631, 7.89064)
+use_collision = true
+size = Vector3(5, 8, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.80854, 3.76886, 2.71133)
+use_collision = true
+size = Vector3(3.5, 8, 10)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.74889, 3.01682, -2.88737)
+use_collision = true
+size = Vector3(10, 6, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall" type="CSGBox3D" parent="Wall7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.22005, 0.366386)
+operation = 2
+size = Vector3(2, 3, 2)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_min = -2
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.47626, 1.93788, -2.03553)
+use_collision = true
+size = Vector3(13, 4, 1)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall" type="CSGBox3D" parent="Wall8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.13434, 0.249052)
+operation = 2
+size = Vector3(2, 3, 2)
+material = SubResource("StandardMaterial3D_5a0sc")
+script = ExtResource("1_cuhqo")
+direction = 1
+x_offset_min = -2
+x_offset_max = 2
+metadata/_custom_type_script = "uid://7fe72kr5g062"
