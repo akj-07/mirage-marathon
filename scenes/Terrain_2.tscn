@@ -25,10 +25,9 @@ size = Vector3(10, 4, 1)
 material = SubResource("StandardMaterial3D_awa44")
 script = ExtResource("1_awa44")
 direction = 1
-x_offset_max = 2
-Scale = 3
-x_scale_max = 10
-y_scale_max = 10
+x_offset_max = 1
+Scale = 2
+z_scale_max = 10
 metadata/_custom_type_script = "uid://7fe72kr5g062"
 
 [node name="Wall2" type="CSGBox3D" parent="."]
@@ -37,10 +36,8 @@ use_collision = true
 size = Vector3(10, 4, 1)
 material = SubResource("StandardMaterial3D_awa44")
 script = ExtResource("1_awa44")
-direction = 1
-x_offset_min = -2
 Scale = 2
-z_scale_max = 5
+z_scale_max = 10
 metadata/_custom_type_script = "uid://7fe72kr5g062"
 
 [node name="Wall7" type="CSGBox3D" parent="."]
@@ -51,6 +48,19 @@ material = SubResource("StandardMaterial3D_awa44")
 script = ExtResource("1_awa44")
 direction = 1
 x_offset_min = -6
+Scale = 2
+z_scale_max = 5
+metadata/_custom_type_script = "uid://7fe72kr5g062"
+
+[node name="Wall9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.894227, 2.03706, -19.2826)
+use_collision = true
+size = Vector3(10, 4, 1)
+material = SubResource("StandardMaterial3D_awa44")
+script = ExtResource("1_awa44")
+direction = 1
+x_offset_min = -6
+x_offset_max = 6
 Scale = 2
 z_scale_max = 5
 metadata/_custom_type_script = "uid://7fe72kr5g062"
@@ -114,8 +124,8 @@ size = Vector3(2, 3, 2)
 material = SubResource("StandardMaterial3D_awa44")
 script = ExtResource("1_awa44")
 direction = 1
-x_offset_min = -10
-x_offset_max = 10
+x_offset_min = -5
+x_offset_max = 5
 metadata/_custom_type_script = "uid://7fe72kr5g062"
 
 [node name="Wall4" type="CSGBox3D" parent="."]

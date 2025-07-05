@@ -5,6 +5,7 @@ class_name TerrainController
 @export var terrain_scenes: Array[PackedScene] = [
 	preload("res://scenes/Terrain_1.tscn"),
 	preload("res://scenes/Terrain_2.tscn"),
+	preload("res://scenes/Terrain_3.tscn")
 ]
 
 var terrain_belt: Array[MeshInstance3D] = []

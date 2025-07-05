@@ -74,12 +74,13 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Control/VBoxContainer/SubViewportContainer2"]
 handle_input_locally = false
-size = Vector2i(1080, 358)
+size = Vector2i(2160, 538)
 render_target_update_mode = 4
 script = ExtResource("3_ytac2")
 
 [node name="CameraForward" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer2/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.0383354, 0.999265, 0, -0.999265, 0.0383354, -0.0487814, 21.3047, -3.23176)
+fov = 100.0
 
 [node name="CameraRight" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer2/SubViewport"]
 transform = Transform3D(0.692345, -0.0276616, -0.721037, 0.721567, 0.0265413, 0.691836, -1.48496e-09, -0.999265, 0.0383354, -21.0632, 21.3047, -3.23176)
@@ -106,7 +107,7 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="Control/VBoxContainer/SubViewportContainer"]
 handle_input_locally = false
-size = Vector2i(1080, 358)
+size = Vector2i(2160, 538)
 render_target_update_mode = 4
 
 [node name="Player" type="CharacterBody3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport"]
@@ -125,7 +126,8 @@ shape = SubResource("ConvexPolygonShape3D_s01a8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0455375, 1.95083, -0.0882642)
 
 [node name="Camera3D" type="Camera3D" parent="Control/VBoxContainer/SubViewportContainer/SubViewport/Player/Neck"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 3.05564)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.484772, 1.02682)
+fov = 120.0
 
 [node name="LeftInputOverlay" type="Control" parent="Control"]
 layout_mode = 1
@@ -148,15 +150,21 @@ script = ExtResource("6_0uv0p")
 
 [node name="Control2" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchor_left = 0.058
+anchor_top = 0.073
+anchor_right = 0.058
+anchor_bottom = 0.073
+offset_left = -22.64
+offset_top = -12.56
+offset_right = -22.64
+offset_bottom = -12.56
 
 [node name="PauseButton" type="Button" parent="Control2"]
 layout_mode = 0
-offset_left = -1.0
-offset_right = 39.0
-offset_bottom = 36.0
+offset_left = 25.0
+offset_top = 8.0
+offset_right = 65.0
+offset_bottom = 44.0
 theme_override_font_sizes/font_size = 20
 text = "||"
 script = ExtResource("5_1lgw5")
