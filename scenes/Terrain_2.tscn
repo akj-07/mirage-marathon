@@ -1,16 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://cnfdg8vc4l172"]
+[gd_scene load_steps=7 format=3 uid="uid://cnfdg8vc4l172"]
 
 [ext_resource type="Script" uid="uid://7fe72kr5g062" path="res://script/Wall.gd" id="1_awa44"]
+[ext_resource type="Texture2D" uid="uid://bkgwoa16sxt47" path="res://assets/WoodFloor064_1K-JPG_Color.jpg" id="1_bp8tf"]
+[ext_resource type="Texture2D" uid="uid://dvo1rq0t00ibe" path="res://assets/PaintedPlaster001_1K-JPG_Color.jpg" id="2_bp8tf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2wl12"]
-albedo_color = Color(0.745098, 0.533333, 0.635294, 1)
+albedo_texture = ExtResource("1_bp8tf")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4y8fk"]
 material = SubResource("StandardMaterial3D_2wl12")
 size = Vector2(30, 50)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awa44"]
-albedo_color = Color(0.701961, 0.439216, 0.168627, 1)
+albedo_texture = ExtResource("2_bp8tf")
+roughness = 0.0
 
 [node name="MeshInstance3D" type="MeshInstance3D"]
 mesh = SubResource("PlaneMesh_4y8fk")
